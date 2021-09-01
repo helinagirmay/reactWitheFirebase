@@ -16,6 +16,7 @@ import {
 import { db } from "../../firebase/config";
 import { useForm, Controller } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
+import ConfirmationModal from "../../components/modal";
 
 const useStyles = makeStyles({
   root: {
@@ -35,16 +36,27 @@ const useStyles = makeStyles({
   button: {
     marginTop: "3%",
   },
+  error: {
+    color: "red",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
 const AddCafe = () => {
   const classes = useStyles();
-  const { control, handleSubmit } = useForm();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [confirmationModal, setConfirmationModal] = useState(false);
 
   const onSubmit = (data) => {
     db.collection("Cafes").add(data);
     setConfirmationModal(true);
+
     console.log("data is", data);
   };
   return (
@@ -58,6 +70,9 @@ const AddCafe = () => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Controller
+                  rules={{
+                    required: true,
+                  }}
                   render={({ field }) => (
                     <TextField
                       required
@@ -72,9 +87,15 @@ const AddCafe = () => {
                   name="name"
                   control={control}
                 />
+                <div className={classes.error}>
+                  {errors.name && <p>Name is required.</p>}
+                </div>
               </Grid>
               <Grid item xs={12}>
                 <Controller
+                  rules={{
+                    required: true,
+                  }}
                   render={({ field }) => (
                     <TextField
                       required
@@ -89,6 +110,9 @@ const AddCafe = () => {
                   name="country"
                   control={control}
                 />
+                <div className={classes.error}>
+                  {errors.country && <p>Country is required.</p>}
+                </div>
               </Grid>
 
               <Grid item xs={12} sm={6}>
@@ -110,6 +134,9 @@ const AddCafe = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
+                  rules={{
+                    required: true,
+                  }}
                   render={({ field }) => (
                     <TextField
                       required
@@ -124,6 +151,9 @@ const AddCafe = () => {
                   name="pinCode"
                   control={control}
                 />
+                <div className={classes.error}>
+                  {errors.country && <p>Pin Code is required.</p>}
+                </div>
               </Grid>
 
               <Grid item xs={12} sm={6}>
@@ -154,7 +184,7 @@ const AddCafe = () => {
                       </RadioGroup>
                     )}
                     rules={{
-                      required: "this field is required",
+                      required: true,
                     }}
                   />
                 </FormControl>
@@ -174,6 +204,7 @@ const AddCafe = () => {
           </form>
         </CardContent>
       </Card>
+      <ConfirmationModal open={confirmationModal} close={!confirmationModal} />
     </>
   );
 };

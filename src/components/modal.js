@@ -1,7 +1,12 @@
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -11,50 +16,45 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
+    border: "0px solid #000",
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: 60,
   },
 }));
 
-export default function TransitionsModal() {
+const ConfirmationModal = (props) => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  const [open, setOpen] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
   };
+  useEffect(() => {
+    setTimeout(() => {
+      setOpen(true);
+    }, 3000);
+  }, []);
 
+  console.log("openn", props);
   return (
     <div>
-      <button type="button" onClick={handleOpen}>
-        react-transition-group
-      </button>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
+      <Dialog
         open={open}
         onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
+        aria-labelledby="alert-dialog-title"
+        className={classes.modal}
+        aria-describedby="alert-dialog-description"
       >
-        <Fade in={open}>
-          <div className={classes.paper}>
-            <h2 id="transition-modal-title">Transition modal</h2>
-            <p id="transition-modal-description">
-              react-transition-group animates me.
-            </p>
-          </div>
-        </Fade>
-      </Modal>
+        <DialogTitle id="alert-dialog-title"></DialogTitle>
+        <DialogContent className={classes.paper}>
+          <DialogContentText id="alert-dialog-description">
+            Congratulations! you have successfully submitted your Cafe.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions></DialogActions>
+      </Dialog>
     </div>
   );
-}
+};
+
+export default ConfirmationModal;
